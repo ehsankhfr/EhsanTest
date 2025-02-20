@@ -1,0 +1,26 @@
+name: Auto-Rebase PR
+
+on:
+  pull_request:
+    types: [synchronize, opened, reopened, ready_for_review]
+  push:
+    branches:
+      - main  # Update to your default branch
+
+jobs:
+  auto-rebase:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write  # Required to push the rebase
+      pull-requests: write  # Required to comment on PRs
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Full history needed for rebasing
+
+      - name: Auto-rebase PR
+        uses: peter-evans/rebase@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
